@@ -1,0 +1,76 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: build-and-run
+spec:
+  tasks:
+  - name: build
+    taskSpec:
+      results:
+      - name: commit-id
+        description: Commit ID extracted from latest build metadata
+      - name: build-id
+        description: Latest build ID
+      steps:
+        - name: havi-commit
+          script: |
+            oc start-build bc/havi -o name | tee | tr -d '\n' > /tekton/results/build-id
+            sleep 10
+            oc get $(cat /tekton/results/build-id) -o=jsonpath='{.spec.revision.git.commit}' > /tekton/results/commit-id
+          image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+  - name: wait-for-build
+    params:
+    - name: build-id
+      value: $(tasks.build.results.build-id)
+    taskSpec:
+      params:
+        - name: build-id
+      steps:
+        - name: wait-for-build
+          script: |
+            oc wait --timeout=600s --for=condition=Complete $(params.build-id)
+            test "$(oc get $(params.build-id) -o=jsonpath='{.status.phase}')" = "Complete"
+          image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+    runAfter:
+    - build
+  - name: run
+    taskSpec:
+      steps:
+        - name: run-havi
+          command:
+          - /usr/bin/havi
+          image: image-registry.openshift-image-registry.svc:5000/havi/havi:latest
+          env:
+          - name: PIPELINE_NAMESPACE
+            value: ota-pipeline
+    runAfter:
+    - wait-for-build
+  finally:
+  - name: slack-notify-success
+    when:
+    - input: "$(tasks.status)"
+      operator: in
+      values: ["Succeeded"]
+    taskRef:
+      name: send-to-channel-slack
+    params:
+    - name: token-secret
+      value: token-secret
+    - name: channel
+      value: "#general"
+    - name: message
+      value: ":large_green_circle: Havi updated to commit $(tasks.build.results.commit-id)"
+  - name: slack-notify-failure
+    when:
+      - input: $(tasks.status)
+        operator: notin
+        values: ["Succeeded"]
+    taskRef:
+      name: send-to-channel-slack
+    params:
+    - name: token-secret
+      value: token-secret
+    - name: channel
+      value: "#general"
+    - name: message
+      value: ":x: Failed to update Havi to commit $(tasks.build.results.commit-id), see $(context.pipelineRun.name) pipelinerun details"

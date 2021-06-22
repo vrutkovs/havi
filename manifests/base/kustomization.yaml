@@ -1,0 +1,4 @@
+resources:
+  - ./buildconfig.yaml
+  - ./imagestream.yaml
+  - ./tekton-pipeline-build-and-run.yaml

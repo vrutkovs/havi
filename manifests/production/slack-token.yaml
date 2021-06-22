@@ -1,0 +1,17 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true"
+  creationTimestamp: null
+  name: token-secret
+spec:
+  encryptedData:
+    token: AgBoCpVft8AnQjnLl9pzmjqsfGASAcR7OfXkY4hnBaDxygQORiVSb2THe8jIS6SgeUYcve05+X20dwnM5sQMVIzQUzjUdwn9KHo7i5Wt5MCeocVORXUyiv8PZ4FuvOzCGygTwBHgLaqJXPbTDkMdzwA7ZtbtywhdspNUV81DezuuVYa69eIONuocfoj1DbnPDLJ2O24NWeJUN711Yek2nkSCQ0OiiTCTonUF8BHNLZKxOWx80iiVw1mjPqEVVu3+3ildQUDJStAX15Jo1wPwelVo6RKRXMf1HZ6GUotfx9qztGYk+SRXx+qru6UjzSTbiF6gYKhmapRu6cvYJCS7KqaWHM74SHmNAAYYtPTQRr7X4swAic70CKVUIpxvsLokvujOnDQEvajtyIyX/bogemw+LFs3PlndHzYuoi+le8WaYpbVo2i/QJIR6jxPESW+h8VaVpZL6grYR+HzUguCRbnVLQ+IFky3bLDjAWzalCJb3tvKdiKGlTUQFdSWFgjzM88ad6T+U5GmYvJ2XHcCIQ85L3JIgtwUz1r3G3r8UZza45s0ylnncelEravH7CA+IUX4tNP1poRwIFVvvZl1mmUHf0RCJ+YwBoLRSpMWKE+5oBXgG7AH1+AAoTTvu6XpUULVcuC88Dz1aJfQkd5lkttEcxr0OKr1LQxFn1qReDpDmtFV5U0AD8Xn7JCAO4BEr71HIcKWtbrH/UQ+ERDqpleGGd/L6UBoB2DGQVCfSRBxGtRPy8ZLzOUvjvxahVm0Mvvj1Ew3FKRBWWc=
+  template:
+    data: null
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "true"
+      creationTimestamp: null
+      name: token-secret

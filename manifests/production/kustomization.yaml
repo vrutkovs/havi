@@ -1,0 +1,7 @@
+bases:
+  - ../base
+resources:
+  - ./rolebinding-pipeline-access.yaml
+  - ./slack-token.yaml
+  - ./start-havi-post-sync.yaml
+  - ./tekton-notify-slack.yaml
