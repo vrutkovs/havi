@@ -19,6 +19,4 @@ spec:
     git:
       uri: https://github.com/vrutkovs/havi
       ref: main
-    sourceSecret:
-      name: "private-repo-creds"
   runPolicy: Serial
