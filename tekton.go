@@ -143,8 +143,8 @@ func (c *clients) buildEdgeReports(versions []string) []tkn.PipelineTask {
 			return semver.New(v[i]).Patch > semver.New(v[j]).Patch
 		})
 		// Leave just last three versions
-		if len(v) > 3 {
-			latestVersions[k] = v[:3]
+		if len(v) > maxVersionsForEdgeReport {
+			latestVersions[k] = v[:maxVersionsForEdgeReport]
 		}
 	}
 
