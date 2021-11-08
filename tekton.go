@@ -98,6 +98,7 @@ func (c *clients) buildVersionReports(versions []string) []tkn.PipelineTask {
 	for i := 0; i < len(versions); i += versionArrayLimit {
 		batch := versions[i:min(i+versionArrayLimit, len(versions))]
 		versionString := strings.Join(batch, " ")
+		klog.Infof("Adding a batch task for versions '%s'", versionString)
 
 		pipelineTask := tkn.PipelineTask{
 			Name: fmt.Sprintf("batch-%d", i),
@@ -160,8 +161,8 @@ func (c *clients) buildEdgeReports(versions []string) []tkn.PipelineTask {
 
 		to := strings.Join(v, " ")
 		for _, from := range latestVersions[int64(i-1)] {
+			klog.Infof("Adding a task to find updates from '%s' to %s", from, to)
 			undottedFrom := strings.Replace(from, ".", "-", -1)
-
 			pipelineTask := tkn.PipelineTask{
 				Name: fmt.Sprintf("upgrade-edge-from-%s", undottedFrom),
 				TaskRef: &tkn.TaskRef{
